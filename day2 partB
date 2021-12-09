@@ -1,0 +1,59 @@
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class day2partA {
+
+	public static void main (String [] args) {
+		
+	ArrayList <String> commands = importFile ("day2input.txt");  	
+		
+	printArray(position (commands));
+		
+	}
+	
+	public static int [] position (ArrayList <String> list) {
+		int [] pos = new int [3]; 
+		
+		for (int index = 0; index < list.size(); index++) {
+		int numb = Integer.parseInt(list.get(index).substring (list.get(index).length() - 1));	
+		char letter = list.get(index).charAt(0);	
+
+		if (letter == 'u') pos[2] -= numb;
+		if (letter == 'd') pos[2] += numb;
+		if (letter == 'f') {
+			pos[0] += numb;
+			pos[1] += pos[2] * numb; 
+		}
+		}
+		
+		return pos; 
+	}
+	
+	public static void printArray (int[] list) {
+		for (int i = 0; i < list.length; i++) {
+			System.out.print (list[i] + " ");
+		}	
+		
+			System.out.println ("\n" + list[0] * list[1]); 
+		}
+	
+	
+	public static ArrayList<String> importFile(String fileName) {
+	    ArrayList<String> words = new ArrayList<>();
+	    try {
+	      File myObj = new File(fileName);
+	      Scanner myReader = new Scanner(myObj);
+	      while (myReader.hasNextLine()) {
+	        words.add(myReader.nextLine());
+	      }
+	      myReader.close();
+	    } catch (FileNotFoundException e) {
+	      System.out.println("An error occurred.");
+	      e.printStackTrace();
+	    }
+	    return words;
+	  }
+	
+}
