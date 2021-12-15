@@ -1,0 +1,95 @@
+import java.util.ArrayList; 
+
+public class Day5 {
+
+	 public static void main(String[] args) {
+		    dangerSpots("day5input.txt");
+		  }
+      
+		  //Converts each element in the ArrayList into a new object, and then adds it into a new Hydropoint ArrayList
+		  public static ArrayList<HydroPoint> convert (ArrayList<String> list) {
+		    ArrayList <HydroPoint> points = new ArrayList <> ();
+
+		    for (int i = 0; i < list.size(); i++) {      
+		      int index = list.get(i).indexOf(" "); 
+
+		      String word = ""; 
+
+		        word = list.get(i).substring(0, index); 
+		        int x1 = Integer.parseInt(word.substring(0, word.indexOf(",")));
+		        int y1 = Integer.parseInt(word.substring(word.indexOf(",") + 1)); 
+		      
+		        word = list.get(i).substring(index + 4);
+		        int x2 = Integer.parseInt(word.substring(0, word.indexOf(",")));
+		        int y2 = Integer.parseInt(word.substring(word.indexOf(",") + 1)); 
+
+		        points.add(new HydroPoint(x1, y1, x2, y2));
+		      }
+
+		    return points; 
+		    }
+
+		  public static int[][] fillArray (ArrayList<HydroPoint> points) {
+		    int[][] map = new int [1000][1000];
+		    
+		    for (int index = 0; index < points.size(); index++) {
+		      int x1 = points.get(index).getx1(); 
+		      int y1 = points.get(index).gety1(); 
+		      int x2 = points.get(index).getx2(); 
+		      int y2 = points.get(index).gety2(); 
+
+		      
+		          for (int col = 0; col < map[0].length; col++) {
+		            if (y1 == y2) {
+		              int min = Math.min(x1, x2);
+		              int max = Math.max(x1, x2);
+
+		              if (col >= min && col <= max ) map[y1][col]++;
+		            }
+		          }
+
+		          for (int row = 0; row < map.length; row++) {
+		            if (x1 == x2) {
+		              int min = Math.min(y1, y2);
+		              int max = Math.max(y1, y2);
+
+		              if (row >= min && row <= max ) map[row][x1]++;
+		          }
+		        }
+		        
+		      }
+		      return map; 
+		    }
+        
+		  public static void printArray (int[][] map) {
+
+		    for (int row = 0; row < map.length; row++) {
+		        for (int col = 0; col < map[0].length; col++) {
+		          System.out.print (map[row][col] + "\t");
+
+		        }
+		        System.out.println (); 
+		    }
+		  }
+		  
+		  //Since the way the test works, I had to change our other methods to work around this one. 
+		  public static int dangerSpots(String data){
+		    ArrayList<String> datapoints = DataImporting.importFile(data); 
+		    ArrayList<HydroPoint> points = convert(datapoints);
+		      
+		      int dangerPoints = 0; 
+		      int[][] map = fillArray(points);
+
+		      for (int row = 0; row < map.length; row++) { 
+		          for (int col = 0; col < map[0].length; col++) {
+		            if (map[col][row] >= 2) dangerPoints++;
+		          }
+		      }
+
+		    printArray(map);
+		    System.out.println (dangerPoints + " POINTS FOUND");
+
+		    return dangerPoints; 
+		  }
+
+}
